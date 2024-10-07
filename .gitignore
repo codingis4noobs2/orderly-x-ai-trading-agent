@@ -1,0 +1,5 @@
+.env
+scaler.pkl
+trading_model.pkl
+streamlit-apps-431010-683a7221ad11.json
+venv
