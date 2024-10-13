@@ -1,81 +1,18 @@
-# AlphaWaveTrader
+# AlphaWaveTrader - Machine Learning Crypto Trading Strategy
+
+## Overview
+**AlphaWaveTrader** is a machine learning-based trading strategy that executes trades on the **ETH/USDT** pair. The strategy integrates technical indicators, historical market data, and a pre-trained machine learning model to predict market trends and make automated buy/sell decisions. It aims to maximize returns while managing risk through the use of technical analysis indicators.
+
+This repository contains the necessary code, models, and resources to set up and deploy the trading strategy, along with backtesting results.
 
 ## Team Members
 - **codingis4noobs2** (Owner)
-
-## Project Overview
-AlphaWaveTrader is an algorithmic trading strategy designed to generate consistent returns through short-term trading on the BNB/USDT trading pair. The strategy leverages machine learning models to predict market trends and make informed buy/sell decisions based on various technical indicators. The goal is to capitalize on quick price movements and optimize profitability while maintaining risk management through strategic entry and exit points.
-
-## Core Strategy Logic and Market Behavior
-AlphaWaveTrader employs a **trend-following** approach by analyzing technical indicators and patterns to identify potential price movements. The core logic of the strategy includes:
-
-1. **Technical Indicator Analysis**: The strategy uses a combination of moving averages, relative strength index (RSI), MACD, and Bollinger Bands to assess price trends, volatility, and momentum.
-2. **Machine Learning Predictions**: The strategy's machine learning model generates predictions based on historical price patterns and technical indicator values. These predictions determine whether the strategy should enter a long (buy) or short (sell) position.
-3. **Position Management**: The strategy automatically closes opposing positions (e.g., closing a short position when a buy signal is generated) to maintain a single directional trade at any given time.
-4. **Short-term Focus**: The strategy aims to capture small profits over shorter timeframes, making it well-suited for short trading scenarios. It seeks to minimize drawdowns and maximize risk-adjusted returns by timing entries and exits effectively.
-
-### Market Behavior
-- **Short-term Market Reactions**: The strategy attempts to take advantage of short-term price movements in the BNB/USDT market. It reacts to changes in momentum and volatility, making it suitable for periods of increased market activity or low liquidity.
-
-## Trading Strategy Specifications
-
-### Market Focus
-- **Trading Pair**: BNB/USDT
-
-### Time Horizon
-- **Strategy Type**: Short-term trading (30m timeframe)
-
-### Data Feeds and Inputs
-The strategy ingests the following data feeds for analysis and decision-making:
-1. **OHLCV Data**: Open, High, Low, Close, and Volume data at 30m intervals. Data received from KuCoin
-2. **Technical Indicators**: 
-   - **Simple Moving Averages (SMA)**: Short-term (10-period) and medium-term (20-period).
-   - **Relative Strength Index (RSI)**: Measures the speed and change of price movements.
-   - **MACD**: Used to identify changes in the strength, direction, momentum, and duration of a trend.
-   - **Bollinger Bands (BB)**: Indicates volatility and potential price reversals.
-   - **Average True Range (ATR)**: Measures volatility.
-   - **Momentum (MOM)**: Measures the rate of change in price movements.
-   - **Rate of Change (ROC)**: Percentage change in price over a specified period.
-
-### Machine Learning Algorithms Used
-The strategy utilizes the following machine learning models for making predictions:
-- **Random Forest Classifier**:
-  - A robust ensemble model that creates multiple decision trees and combines their predictions to classify price movements.
-  - Trained on historical price data and technical indicators to predict the likelihood of a positive or negative price movement.
-
-### Performance Metrics
-The following metrics summarize the results of backtesting the strategy over a 5-day period:
-
-- **Start**: 2024-10-02 03:30:00
-- **End**: 2024-10-07 03:00:00
-- **Duration**: 4 days 23:30:00
-- **Exposure Time [%]**: 99.17
-- **Equity Final [$]**: 1024.65
-- **Equity Peak [$]**: 1025.71
-- **Return [%]**: 2.46
-- **Buy & Hold Return [%]**: 3.40
-- **Return (Annualized) [%]**: 617.94
-- **Volatility (Annualized) [%]**: 42.35
-- **Sharpe Ratio**: 14.59
-- **Sortino Ratio**: Inf
-- **Calmar Ratio**: 344.57
-- **Max. Drawdown [%]**: -1.79
-- **Avg. Drawdown [%]**: -0.41
-- **Max. Drawdown Duration**: 2 days 04:30:00
-- **Avg. Drawdown Duration**: 0 days 08:37:00
-- **Number of Trades**: 5
-- **Win Rate [%]**: 40.0
-- **Best Trade [%]**: 6.64
-- **Worst Trade [%]**: -1.82
-- **Avg. Trade [%]**: 0.88
-- **Max. Trade Duration**: 4 days 06:30:00
-- **Avg. Trade Duration**: 0 days 23:42:00
-- **Profit Factor**: 2.88
+---
 
 ## Project Setup
 
 ### Step 1: Create a Virtual Environment
-First, create and activate a virtual environment:
+First, create and activate a virtual environment to manage project dependencies:
 
 ```bash
 # Create a virtual environment
@@ -84,45 +21,124 @@ python -m venv env
 # Activate the virtual environment
 # On Windows:
 env\Scripts\activate
+
 # On macOS/Linux:
 source env/bin/activate
 ```
 
 ### Step 2: Install Dependencies
-Install all required libraries from the requirements.txt file:
+Once the virtual environment is activated, install all required dependencies using the provided `requirements.txt` file:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Step 3: Set Up Environment Variables
-Run the setup_account.py file to generate the .env file, which will contain the necessary environment variables:
+Run the `setup_account.py` script to generate the `.env` file, which will contain the necessary environment variables:
+
 ```bash
 python setup_account.py
 ```
 
+This will create a `.env` file that holds the GCP project ID and the path to the Google Cloud service account credentials.
+
 ### Step 4: Configure Google Cloud Project
-- Obtain your **GCP Project ID** and create a **service account** with the role: `Basic -> Owner`.
-- Download the service account JSON file and add it to your project directory.
+1. Obtain your **Google Cloud Project ID**.
+2. Create a **service account** in your GCP project with the role: **Basic -> Owner**.
+3. Download the service account JSON file and place it in the project directory.
+4. Update the `.env` file with the following fields:
 
-Update the `.env` file with the following fields:
-- `GCP_PROJECT_ID` : Your GCP Project ID.
-- `GOOGLE_APPLICATION_CREDENTIALS` : Path to the downloaded service account JSON file.
-
-Example `.env` file:
-
-```
+```env
 GCP_PROJECT_ID=your_gcp_project_id
 GOOGLE_APPLICATION_CREDENTIALS=path_to_your_service_account.json
 ```
 
+Make sure the `.env` file has correct values to ensure successful integration with Google Cloud.
+
 ### Step 5: Train the Model
-Run the `model_training.ipynb` Jupyter notebook to train the machine learning model and store it in Google Cloud Storage
+To train the machine learning model, open and run the `model_training.ipynb` Jupyter notebook. This notebook fetches historical data, computes technical indicators, and trains the Random Forest Classifier model. The trained model is then stored in **Google Cloud Storage** for later use by the trading strategy.
 
 ### Step 6: Execute the Strategy and Backtest
-Run the `trading_strategy.ipynb` Jupyter notebook to execute the strategy and perform backtesting
+Run the `trading_strategy.ipynb` Jupyter notebook to execute the strategy and perform backtesting. This notebook simulates the strategy using historical data, evaluates its effectiveness, and outputs the performance metrics (e.g., returns, Sharpe ratio, drawdown). For 2 weeks testing, Please change the lookback value to 14 and Interval to 30m.
 
-This notebook will simulate the trading strategy using historical data and provide performance metrics to evaluate its effectiveness.
+---
 
-## GCP Tools Used
-1. **Cloud Storage**: For storing the trained machine learning model and scaler.
-2. **BigQuery**: For storing and analyzing historical trading data.
+## Core Logic of the Strategy
+
+The trading strategy leverages a combination of technical indicators and a machine learning model (Random Forest Classifier) to predict price movements and generate buy/sell signals. Key technical indicators used are:
+
+- **Simple Moving Averages (SMA)**: 10-period and 20-period moving averages.
+- **RSI (Relative Strength Index)**: Momentum oscillator to identify overbought/oversold conditions.
+- **MACD (Moving Average Convergence Divergence)**: Measures momentum and trend direction.
+- **Bollinger Bands**: Volatility-based indicator to identify overbought/oversold levels.
+- **ATR (Average True Range)**: Volatility indicator measuring the range of price movement.
+- **Momentum (MOM)**: Measures the rate of price change.
+- **Rate of Change (ROC)**: Percentage change between the current price and the price a number of periods ago.
+
+The **Random Forest Classifier** takes these technical indicators as input features and predicts whether to buy or sell based on historical price action.
+
+### Intended Market Behavior
+The strategy is designed to capture trends and avoid significant drawdowns. It performs best in trending markets and adjusts its risk based on real-time technical analysis.
+
+---
+
+## Backtesting & Simulation Results
+
+### Performance Metrics
+Backtesting was performed on the **ETH/USDT** pair from **August 14, 2024** to **October 13, 2024** (approximately 60 days). Initial capital was set to $4000, and the results were compared to a simple buy-and-hold strategy.
+
+| Metric                         | Value          |
+| ------------------------------- | -------------- |
+| **Equity Final [$]**             | 5229.52        |
+| **Return [%]**                   | 30.74          |
+| **Buy & Hold Return [%]**        | -10.41         |
+| **Return (Ann.) [%]**            | 387.55         |
+| **Sharpe Ratio**                 | 2.70           |
+| **Sortino Ratio**                | 31.55          |
+| **Calmar Ratio**                 | 53.32          |
+| **Max Drawdown [%]**             | -7.27          |
+| **Avg. Drawdown [%]**            | -1.50          |
+| **Max. Drawdown Duration**       | 17 days 16:00  |
+| **Profit Factor**                | 2.78           |
+| **Number of Trades**             | 53             |
+| **Win Rate [%]**                 | 54.72          |
+| **Best Trade [%]**               | 12.17          |
+| **Worst Trade [%]**              | -4.15          |
+| **Max. Trade Duration**          | 7 days 08:00   |
+
+### Key Performance Indicators (KPIs)
+- **Sharpe Ratio**: A measure of risk-adjusted return. A Sharpe ratio above 2 is generally considered excellent.
+- **Max Drawdown**: The maximum observed loss from a peak to a trough in the strategy’s equity curve.
+- **Profit Factor**: The ratio of gross profit to gross loss, with a value greater than 2 indicating high profitability.
+
+The trading strategy outperformed the buy-and-hold approach significantly, achieving a return of **30.74%** compared to **-10.41%** for buy-and-hold. The risk-adjusted metrics (Sharpe ratio and Sortino ratio) also indicate strong performance with relatively low risk.
+
+---
+
+## Data Feeds & Machine Learning Algorithms
+
+### Data Feeds
+The strategy ingests historical and live OHLCV data (Open, High, Low, Close, Volume) for the **ETH/USDT** pair, fetched from cryptocurrency exchanges using the **ccxt** library. This data is used to compute technical indicators and train the machine learning model.
+
+### Machine Learning Algorithms
+The strategy uses a **Random Forest Classifier** to predict price movements. The model is trained on historical data and generates buy/sell signals in real-time based on technical indicators.
+
+---
+
+## Tokens Focused on Trading
+
+The primary asset pair traded by this strategy is **ETH/USDT**. The strategy can be adapted to trade other pairs like **BTC/USDT** or **BNB/USDT** by adjusting the data sources and retraining the model with the corresponding asset data.
+
+---
+
+## Notable Points
+
+- **Google Cloud Integration**: Data is stored in **BigQuery**, and the trained model is saved in **Google Cloud Storage**. This allows for scalable storage and remote access.
+- **Risk Management**: The strategy ensures only one position (long or short) is active at any time, reducing exposure to volatile markets.
+---
+
+## Future Improvements
+
+- **Sentiment Analysis**: Future versions could incorporate sentiment data from news sources or social media platforms to improve the model’s predictive power during volatile markets.
+- **Reinforcement Learning**: Exploring reinforcement learning to allow the model to adapt to changing market conditions in real-time.
+- **Extended Asset Coverage**: Expanding the strategy to cover more cryptocurrency pairs like **BTC/USDT**, **BNB/USDT**, and other high-liquidity assets.
