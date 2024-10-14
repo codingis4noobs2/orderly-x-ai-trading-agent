@@ -44,7 +44,7 @@ This will create a `.env` file that holds the GCP project ID and the path to the
 
 ### Step 4: Configure Google Cloud Project
 1. Obtain your **Google Cloud Project ID**.
-2. Create a **service account** in your GCP project with the role: **Basic -> Owner**.
+2. Create a **service account**(Goto IAM and click Service Accounts) in your GCP project with the role: **Basic -> Owner**.
 3. Make sure you have enabled BigQuery API.
 4. Download the service account JSON file and place it in the project directory.
 5. Update the `.env` file with the following fields:
